@@ -28,7 +28,7 @@ utils.defineProperty(exportUtils, 'sha256', utils.sha256);
 // http://ethereum.stackexchange.com/questions/760/how-is-the-address-of-an-ethereum-contract-computed
 utils.defineProperty(exportUtils, 'getContractAddress', function(transaction) {
     return SigningKey.getAddress('0x' + utils.sha3(rlp.encode([
-        utils.hexOrBuffer(utils.getAddress(transaction.from)),
+        utils.hexOrBuffer(SigningKey.getAddress(transaction.from)),
         utils.hexOrBuffer(utils.hexlify(transaction.nonce, 'nonce'))
     ])).slice(12).toString('hex'));
 });
@@ -1004,7 +1004,6 @@ function getGasPrice(value) {
     if (!value || !value.transactions || value.transactions.length === 0) {
         throw new Error('invalid response');
     }
-    console.log(value.transactions[0].gasPrice)
     return hexToBN(value.transactions[0].gasPrice);
 }
 
@@ -1082,11 +1081,8 @@ utils.defineProperty(EtherscanProvider.prototype, 'getTransactionCount', functio
 });
 
 utils.defineProperty(EtherscanProvider.prototype, 'getGasPrice', function() {
-/* This doesn't work, over-estimates gas if current block was anxious
-    var query = ('module=proxy&action=eth_getBlockByNumber&tag=latest&boolean=true');
-    return this._send(query, getGasPrice);
-*/
-    throw new Error('etherscan does not support gasPrice');
+    var query = ('module=proxy&action=eth_gasPrice');
+    return this._send(query, hexToBN);
 });
 
 utils.defineProperty(EtherscanProvider.prototype, 'sendTransaction', function(signedTransaction) {
@@ -1104,7 +1100,25 @@ utils.defineProperty(EtherscanProvider.prototype, 'call', function(transaction) 
 });
 
 utils.defineProperty(EtherscanProvider.prototype, 'estimateGas', function(transaction) {
-    throw new Error('etherscan does not support estimation');
+    var address = SigningKey.getAddress(transaction.to);
+
+    var query = 'module=proxy&action=eth_estimateGas&to=' + address;
+    if (transaction.gasPrice) {
+        query += '&gasPrice=' + utils.hexlify(transaction.gasPrice);
+    }
+    if (transaction.gasLimit) {
+        query += '&gas=' + utils.hexlify(transaction.gasLimit);
+    }
+    if (transaction.from) {
+        query += '&from=' + SigningKey.getAddress(transaction.from);
+    }
+    if (transaction.data) {
+        query += '&data=' + ensureHex(transaction.data);
+    }
+    if (transaction.value) {
+        query += '&value=' + utils.hexlify(transaction.value);
+    }
+    return this._send(query, hexToBN);
 });
 
 
@@ -1182,10 +1196,10 @@ function Randomish() {
         var aesCbc = new aes.ModeOfOperation.cbc(key, this.feedEntropy());
         var result = new Buffer(0);
         while (result.length < length) {
-            result = result.concat([result, this.feedEntropy()]);
+            result = Buffer.concat([result, this.feedEntropy()]);
         }
 
-        return result;
+        return result.slice(0, length);
     });
 
     this.feedEntropy();
@@ -2047,7 +2061,7 @@ function Wallet(privateKey, provider) {
             value = utils.hexOrBuffer(utils.hexlify(value), fieldInfo.name);
 
             // Fixed-width field
-            if (fieldInfo.length && value.length !== fieldInfo.length) {
+            if (fieldInfo.length && value.length !== fieldInfo.length && value.length > 0) {
                 var error = new Error('invalid ' + fieldInfo.name);
                 error.reason = 'wrong length';
                 error.value = value;
@@ -2207,7 +2221,14 @@ var zero = new utils.BN(0);
 var negative1 = new utils.BN(-1);
 var tenPower18 = new utils.BN('1000000000000000000');
 utils.defineProperty(Wallet, 'formatEther', function(wei, options) {
-    if (typeof(wei) === 'number') { wei = new utils.BN(wei); }
+
+    if (typeof(wei) === 'number') {
+        // @TODO: Warn if truncation will occur?
+        wei = new utils.BN(wei);
+    } else if (utils.isHexString(wei)) {
+        wei = new utils.BN(wei.substring(2), 16);
+    }
+
     if (!options) { options = {}; }
 
     if (!(wei instanceof utils.BN)) { throw new Error('invalid wei'); }

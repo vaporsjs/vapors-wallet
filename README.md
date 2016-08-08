@@ -1,17 +1,36 @@
 ethers-wallet
 =============
 
-Complete Ethereum wallet implementation in JavaScript.
+[![npm version](https://badge.fury.io/js/ethers-wallet.svg)](https://badge.fury.io/js/ethers-wallet)
 
-Features
+Complete Ethereum wallet implementation and utilities in JavaScript.
+
+**Features:**
+
 - Keep your private keys in your browser
-- Import and export JSON wallets (geth and crowdsale) and brain wallets
-- Generate JavaScript bindings for any contract ABI
-- Connect to Ethereum nodes over RPC
+- Import and export JSON wallets (Geth and crowdsale) and brain wallets
+- Meta-classes create JavaScript objects from any contract ABI
+- Connect to Ethereum nodes over RPC, injected Web3 or [Etherscan](https://etherscan.io)
 - Small (~100kb compressed; 290kb uncompressed)
 - MIT licensed (with one exception, which we are migrating off of; see below)
 
 **NOTE: This is still very beta; please only use it on the testnet for now, or with VERY small amounts of ether on the livenet that you are willing to lose due to bugs.**
+
+
+Installing
+----------
+
+To use in a browser:
+
+```html
+<script type="text/javascript" src="https://rawgit.com/ethers-io/ethers-wallet/master/dist/ethers-wallet.min.js"></script>
+```
+
+To use in [node.js](https://nodejs.org/):
+
+```
+npm install ethers-wallet
+```
 
 
 API
@@ -228,28 +247,28 @@ var web3Provider = new Web3.providers.HttpProvider('http://localhost:8545');
 var web3 = new Web3(web3Provider);
 
 // All these are equivalent
-var Wallet = new Wallet(privateKey, 'http://localhost:8545');
-var Wallet = new Wallet(privateKey, web3Provider);
-var Wallet = new Wallet(privateKey, web3);
+var wallet = new Wallet(privateKey, 'http://localhost:8545');
+var wallet = new Wallet(privateKey, web3Provider);
+var wallet = new Wallet(privateKey, web3);
 
 // Or use Etherscan:
-var Wallet = new Wallet(privateKey, new Wallet.providers.EtherscanProvider({testnet: true}));
+var wallet = new Wallet(privateKey, new Wallet.providers.EtherscanProvider({testnet: true}));
 
 
 // With a provider attached, you can call additional methods on the wallet
 
 // Get the wallet's balance
-Wallet.getBalance().then(function(balance) {
+wallet.getBalance().then(function(balance) {
     console.log(balance);
 });
 
 // Get the current nonce for this wallet
-Wallet.getTransactionCount().then(function(transactionCount) {
+wallet.getTransactionCount().then(function(transactionCount) {
     console.log(transactionCount);
 })
 
 // Send ether to another account or contract
-Wallet.send(targetAddress, Wallet.parseEther(1.0)).then(function(txid) {
+wallet.send(targetAddress, Wallet.parseEther(1.0)).then(function(txid) {
     console.log(txid);
 })
 ```
@@ -341,7 +360,7 @@ To run the test suite,
 ```
 /Users/ethers> npm test
 
-> ethers-wallet@0.0.3 test /Users/ethers/ethers-wallet
+> ethers-wallet@0.0.9 test /Users/ethers/ethers-wallet
 > nodeunit test.js
 
 Running test cases... (this can take a long time, please be patient)
@@ -356,8 +375,10 @@ index.js
 + testContracts
 + testSecretStorage
 + testBrainWallet
++ testContractAddress
++ testProviders
 
-OK: 52156 assertions (127920ms)
+OK: 52178 assertions (147788ms)
 ```
 
 There are also some test JSON wallets available in the [test-wallets](https://github.com/ethers-io/ethers-wallet/tree/master/test-wallets) directory.
