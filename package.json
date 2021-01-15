@@ -32,9 +32,8 @@
     "grunt-browserify": "^5.0.0",
     "grunt-contrib-uglify": "^1.0.1",
     "nodeunit": "0.9.1",
-    "web3": "0.15.3",
-
-    "vaporyjs-vm": "1.4.0",
+    "@vapory/web3": "0.20.4",
+    "vaporyjs-vm": "2.3.5",
     "solc": "0.3.5"
   },
   "keywords": [
