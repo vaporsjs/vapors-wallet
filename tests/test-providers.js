@@ -20,7 +20,7 @@ module.exports = function(test) {
          (new Wallet.providers.Web3Provider(web3Provider)),
          (new Wallet.providers.Web3Provider(web3)),
          (new Wallet.providers.HttpProvider(url)),
-         (new Wallet.providers.EtherscanProvider({testnet: true})),
+         (new Wallet.providers.VaporscanProvider({testnet: true})),
      ]
 
      var pending = [];

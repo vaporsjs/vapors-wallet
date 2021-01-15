@@ -1,16 +1,16 @@
 'use strict';
 var Wallet = require('../index.js');
 
-var ethereumUtil = require('ethereumjs-util');
+var vaporyUtil = require('vaporyjs-util');
 
 var utils = require('./utils.js');
 
 
 module.exports = function(test) {
     function testAddress(address) {
-        var official = ethereumUtil.toChecksumAddress(address);
-        var ethers = Wallet.getAddress(address);
-        test.equal(ethers, official, 'wrong address');
+        var official = vaporyUtil.toChecksumAddress(address);
+        var vapors = Wallet.getAddress(address);
+        test.equal(vapors, official, 'wrong address');
     }
 
     test.expect(2 + 10000);

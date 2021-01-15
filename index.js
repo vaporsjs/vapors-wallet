@@ -28,10 +28,10 @@ utils.defineProperty(exportUtils, 'getContractAddress', utils.getContractAddress
 module.exports = Wallet;
 
 
-utils.defineProperty(Wallet, 'etherSymbol', '\uD835\uDF63');
+utils.defineProperty(Wallet, 'vaporSymbol', '\uD835\uDF63');
 
-utils.defineProperty(Wallet, 'formatEther', units.formatEther);
-utils.defineProperty(Wallet, 'parseEther', units.parseEther);
+utils.defineProperty(Wallet, 'formatVapor', units.formatVapor);
+utils.defineProperty(Wallet, 'parseVapor', units.parseVapor);
 
 utils.defineProperty(Wallet, 'getAddress', utils.getAddress);
 utils.defineProperty(Wallet, 'getIcapAddress', utils.getIcapAddress);

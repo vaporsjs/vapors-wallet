@@ -2,8 +2,8 @@
 var Wallet = require('../index.js');
 
 var solc = require('solc');
-var ethereumVm = require('ethereumjs-vm');
-var ethereumUtil = require('ethereumjs-util');
+var vaporyVm = require('vaporyjs-vm');
+var vaporyUtil = require('vaporyjs-util');
 
 var BN = Wallet.utils.BN;
 var utils = require('./utils.js');
@@ -162,19 +162,19 @@ module.exports = function(test) {
         if (!normalizedValues) { normalizedValues = values; }
 
         // First make sure we agree with ourself
-        var ethersData = Wallet.Contract.Interface.encodeParams(types, values);
-        var ethersValues = Wallet.Contract.Interface.decodeParams(types, ethersData);
+        var vaporsData = Wallet.Contract.Interface.encodeParams(types, values);
+        var vaporsValues = Wallet.Contract.Interface.decodeParams(types, vaporsData);
 
         // Convert the result object into an Array
-        var ethersValuesArray = [];
-        for (var i = 0; ethersValues[i] !== undefined; i++) {
-            ethersValuesArray.push(ethersValues[i]);
+        var vaporsValuesArray = [];
+        for (var i = 0; vaporsValues[i] !== undefined; i++) {
+            vaporsValuesArray.push(vaporsValues[i]);
         }
 
-        var okSelf = recursiveEqual(normalizedValues, ethersValuesArray);
+        var okSelf = recursiveEqual(normalizedValues, vaporsValuesArray);
         test.ok(okSelf, "self encode/decode failed");
         if (!okSelf) {
-            console.log('okSelf', okSelf, types, values, normalizedValues, ethersValues, ethersValuesArray);
+            console.log('okSelf', okSelf, types, values, normalizedValues, vaporsValues, vaporsValuesArray);
         }
 
         checkPromises.push(new Promise(function(resolve, reject) {
@@ -188,7 +188,7 @@ module.exports = function(test) {
                 var contract = createContractOutput(types, values);
                 var contractInterface = new Wallet.Contract.Interface(JSON.parse(contract.interface));
                 var call = contractInterface.test.apply(contractInterface);
-                var vm = new ethereumVm();
+                var vm = new vaporyVm();
                 vm.runCode({
                     code: new Buffer(contract.runtimeBytecode, 'hex'),
                     data: new Buffer(call.data.substring(2), 'hex'),
@@ -201,16 +201,16 @@ module.exports = function(test) {
 
                     try {
                         var vmData = '0x' + result.return.toString('hex');
-                        test.equal(ethersData, vmData, 'Failed to generate same output as VM');
-                        if (ethersData !== vmData) {
+                        test.equal(vaporsData, vmData, 'Failed to generate same output as VM');
+                        if (vaporsData !== vmData) {
                             console.log('\n\n');
                             console.log(contract.sourceCode);
                             console.log({
                                 types: types,
                                 values: values
                             });
-                            console.log('ethers=');
-                            dumpHex(ethersData);
+                            console.log('vapors=');
+                            dumpHex(vaporsData);
                             console.log('vm=');
                             dumpHex('0x' + result.return.toString('hex'));
                         }
@@ -228,7 +228,7 @@ module.exports = function(test) {
     }
 
 
-    // Test cases: https://github.com/ethereum/solidity.js/blob/master/test/coder.decodeParam.js
+    // Test cases: https://github.com/vaporyco/solidity.js/blob/master/test/coder.decodeParam.js
     check(['int'], [new BN(1)]);
     check(['int'], [new BN(16)]);
     check(['int'], [new BN(-1)]);

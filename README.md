@@ -1,20 +1,20 @@
-ethers-wallet
+vapors-wallet
 =============
 
-[![npm version](https://badge.fury.io/js/ethers-wallet.svg)](https://badge.fury.io/js/ethers-wallet)
+[![npm version](https://badge.fury.io/js/vapors-wallet.svg)](https://badge.fury.io/js/vapors-wallet)
 
-Complete Ethereum wallet implementation and utilities in JavaScript.
+Complete Vapory wallet implementation and utilities in JavaScript.
 
 **Features:**
 
 - Keep your private keys in your browser
-- Import and export JSON wallets (Geth and crowdsale) and brain wallets
+- Import and export JSON wallets (Gvap and crowdsale) and brain wallets
 - Meta-classes create JavaScript objects from any contract ABI
-- Connect to Ethereum nodes over RPC, injected Web3 or [Etherscan](https://etherscan.io)
+- Connect to Vapory nodes over RPC, injected Web3 or [Vaporscan](https://vaporscan.io)
 - Small (~100kb compressed; 290kb uncompressed)
 - MIT licensed (with one exception, which we are migrating off of; see below)
 
-**NOTE: This is still very beta; please only use it on the testnet for now, or with VERY small amounts of ether on the livenet that you are willing to lose due to bugs.**
+**NOTE: This is still very beta; please only use it on the testnet for now, or with VERY small amounts of vapor on the livenet that you are willing to lose due to bugs.**
 
 
 Installing
@@ -23,13 +23,13 @@ Installing
 To use in a browser:
 
 ```html
-<script type="text/javascript" src="https://rawgit.com/ethers-io/ethers-wallet/master/dist/ethers-wallet.min.js"></script>
+<script type="text/javascript" src="https://rawgit.com/vaporsjs/vapors-wallet/master/dist/vapors-wallet.min.js"></script>
 ```
 
 To use in [node.js](https://nodejs.org/):
 
 ```
-npm install ethers-wallet
+npm install vapors-wallet
 ```
 
 
@@ -39,7 +39,7 @@ API
 
 ### Wallet API
 
-An *Ethereum* wallet wraps a cryptographic private key, which is used to sign transactions and control the ether located at the wallet's address. These transactions can then be broadcast to the *Ethereum* network.
+An *Vapory* wallet wraps a cryptographic private key, which is used to sign transactions and control the vapor located at the wallet's address. These transactions can then be broadcast to the *Vapory* network.
 
 ```javascript
 // A private key can be specified as a 32 byte buffer or hexidecimal string
@@ -102,7 +102,7 @@ Wallet.getAddress('0x7357589f8e367c2c31f51242fb77b350a11830F3')
 
 ### Crowdsale JSON Wallets
 
-During the crowdsale, the Ethereum Project sold ether by generating *crowdsale JSON wallet*. These functions allow you to decrypt those files and retreive the private key.
+During the crowdsale, the Vapory Project sold vapor by generating *crowdsale JSON wallet*. These functions allow you to decrypt those files and retreive the private key.
 
 ```javascript
 
@@ -121,7 +121,7 @@ console.log(wallet.privateKey)
 
 ### Secret Storage JSON Wallet
 
-This API allows you to decrypt and encrypt the [Secret Storage](https://github.com/ethereum/wiki/wiki/Web3-Secret-Storage-Definition) format used by *Geth* and many other wallet platforms (such as *ethers.io*).
+This API allows you to decrypt and encrypt the [Secret Storage](https://github.com/vaporyco/wiki/wiki/Web3-Secret-Storage-Definition) format used by *Gvap* and many other wallet platforms (such as *vapors.io*).
 
 The Secret Storage JSON Wallet format uses an algorithm called *scrypt*, which is intentionally CPU-intensive, which ensures that an attacker would need to tie up considerable resources to attempt to brute-force guess your password. It aslo means it may take some time (10-30 seconds) to decrypt or encrypt a wallet. So, these API calls use a callback to provide progress feedback as well as the opportunity to cancel the process.
 
@@ -200,7 +200,7 @@ wallet.encrypt(password, options, updateInterface).then(function(json) {
 
 ### Brain Wallets
 
-Brain wallets should not be considered a secure way to store large amounts of ether; anyone who knows your username/password can steal your funds.
+Brain wallets should not be considered a secure way to store large amounts of vapor; anyone who knows your username/password can steal your funds.
 
 ```javascript
 
@@ -233,7 +233,7 @@ Wallet.summonBrainWallet(email, password, updateInterface).then(function(wallet)
 Provider API
 ------------
 
-Connect to standard *Ethereum* nodes via RPC (if you have a local [parity](https://ethcore.io/parity.html) or [geth](https://github.com/ethereum/go-ethereum/wiki/Geth) instance running), or via [Etherscan](https://etherscan.io):
+Connect to standard *Vapory* nodes via RPC (if you have a local [parity](https://ethcore.io/parity.html) or [gvap](https://github.com/vaporyco/go-vapory/wiki/Gvap) instance running), or via [Vaporscan](https://vaporscan.io):
 
 ```javascript
 
@@ -246,8 +246,8 @@ var wallet = new Wallet(privateKey, 'http://localhost:8545');
 var wallet = new Wallet(privateKey, web3Provider);
 var wallet = new Wallet(privateKey, web3);
 
-// Or use Etherscan:
-var wallet = new Wallet(privateKey, new Wallet.providers.EtherscanProvider({testnet: true}));
+// Or use Vaporscan:
+var wallet = new Wallet(privateKey, new Wallet.providers.VaporscanProvider({testnet: true}));
 
 
 // With a provider attached, you can call additional methods on the wallet
@@ -262,8 +262,8 @@ wallet.getTransactionCount().then(function(transactionCount) {
     console.log(transactionCount);
 })
 
-// Send ether to another account or contract
-wallet.send(targetAddress, Wallet.parseEther('1.0')).then(function(txid) {
+// Send vapor to another account or contract
+wallet.send(targetAddress, Wallet.parseVapor('1.0')).then(function(txid) {
     console.log(txid);
 })
 ```
@@ -322,7 +322,7 @@ contract.getValue().then(function(value) {
     console.log('Value is "' + value + '".')
 })
 
-// Call state-changing methods (which will cost you ether, so use testnet to test!)
+// Call state-changing methods (which will cost you vapor, so use testnet to test!)
 // Returns a promise.
 contract.setValue("Hello World").then(function(txid) {
     console.log('txid: ' + txid);
@@ -353,9 +353,9 @@ A lot of the test cases are performed by comparing against known working impleme
 To run the test suite, 
 
 ```
-/Users/ethers> npm test
+/Users/vapors> npm test
 
-> ethers-wallet@0.0.9 test /Users/ethers/ethers-wallet
+> vapors-wallet@0.0.9 test /Users/vapors/vapors-wallet
 > nodeunit test.js
 
 Running test cases... (this can take a long time, please be patient)
@@ -364,7 +364,7 @@ index.js
 + testPrivateKeyToAddress
 + testChecksumAddress
 + testIcapAddress
-+ testEtherFormat
++ testVaporFormat
 + testTrasactions
 + testSolidityCoder
 + testContracts
@@ -376,7 +376,7 @@ index.js
 OK: 52178 assertions (147788ms)
 ```
 
-There are also some test JSON wallets available in the [test-wallets](https://github.com/ethers-io/ethers-wallet/tree/master/test-wallets) directory.
+There are also some test JSON wallets available in the [test-wallets](https://github.com/vapors-io/vapors-wallet/tree/master/test-wallets) directory.
 
 
 License

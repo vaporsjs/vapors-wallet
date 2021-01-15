@@ -1,7 +1,7 @@
 'use strict';
 var Wallet = require('../index.js');
 
-var ethereumTx = require('ethereumjs-tx');
+var vaporyTx = require('vaporyjs-tx');
 
 var utils = require('./utils.js');
 
@@ -13,17 +13,17 @@ function randomHexString(lowerRandomInterval, upperOpenInterval) {
 module.exports = function(test) {
 
     function testTransaction(privateKey, transaction, signature) {
-        var rawTransaction = new ethereumTx(transaction);
+        var rawTransaction = new vaporyTx(transaction);
         rawTransaction.sign(privateKey);
-        var ethereumLib = '0x' + rawTransaction.serialize().toString('hex');
+        var vaporyLib = '0x' + rawTransaction.serialize().toString('hex');
 
         var wallet = new Wallet(privateKey);
-        var ethers = wallet.sign(transaction);
+        var vapors = wallet.sign(transaction);
 
-        test.equal(ethers, ethereumLib, 'invalid transaction');
+        test.equal(vapors, vaporyLib, 'invalid transaction');
 
         // @TODO: More testing on parsed transaction.
-        test.equal(wallet.address, Wallet.parseTransaction(ethers).from, 'invalid parseTransaction');
+        test.equal(wallet.address, Wallet.parseTransaction(vapors).from, 'invalid parseTransaction');
     }
 
     for (var i = 0; i < 10000; i++) {
@@ -39,7 +39,7 @@ module.exports = function(test) {
         testTransaction(utils.randomBuffer(32), transaction);
     }
 
-    // See: https://github.com/ethereumjs/ethereumjs-tx/blob/master/test/txs.json
+    // See: https://github.com/vaporyjs/vaporyjs-tx/blob/master/test/txs.json
     testTransaction(new Buffer('164122e5d39e9814ca723a749253663bafb07f6af91704d9754c361eb315f0c1', 'hex'), {
         nonce: "0x",
         gasPrice: "0x09184e72a000",

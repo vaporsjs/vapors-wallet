@@ -1,28 +1,28 @@
 <html>
     <head>
-        <title>Ethereum Classic Split Tool</title>
+        <title>Vapory Classic Split Tool</title>
         <link rel="stylesheet" type="text/css" href="../style.css">
     </head>
     <body>
         <div class="centerer">
             <div class="centered">
-                <h1>Split Ether Classic</h1>
+                <h1>Split Vapor Classic</h1>
                 <hr />
                 <h2>What does this tool do?</h2>
                 <p>
-                    This tool will take a <i>geth</i> (or crowdsale) JSON wallet, decrypt it and
+                    This tool will take a <i>gvap</i> (or crowdsale) JSON wallet, decrypt it and
                     send all its funds to <a href="http://etherscan.io/address/0x3474627d4f63a678266bc17171d87f8570936622#code">this contract</a>,
                     which will:
                 </p>
                 <ul>
-                    <li>On the ETH branch &mdash; send the funds back to the original address</li>
+                    <li>On the VAP branch &mdash; send the funds back to the original address</li>
                     <li>On the ETC branch &mdash; send the funds to the provided target address (for example, a <a href="https://www.poloniex.com">Poloniex</a> deposit address)</li>
                 </ul>
                 <br />
                 <h3>Disclaimer:</h3>
                 <p>
-                    I threw this together in couple of hours, mainly to split my own ether
-                    and test my <i>ethers-wallet</i> library (which is still missing features
+                    I threw this together in couple of hours, mainly to split my own vapor
+                    and test my <i>vapors-wallet</i> library (which is still missing features
                     and is itself not ready for production use). Testing has been fairly minimal
                     beyond trying it on a few wallets. <b>Use this at your own risk.</b>
                 </p>
@@ -36,12 +36,12 @@
                     <tr>
                         <td> </td>
                         <td>
-                            <div id="submitCheck" class="submit disable">Check Classic Ether Balance</div>
+                            <div id="submitCheck" class="submit disable">Check Classic Vapor Balance</div>
                         </td>
                     </tr>
                 </table>
                 <hr />
-                <h2>Split ETC/ETH</h2>
+                <h2>Split ETC/VAP</h2>
                 <table>
                     <tr>
                         <th>JSON Wallet:</th>
@@ -58,14 +58,14 @@
                     <tr>
                         <td> </td>
                         <td>
-                            <div id="submitSplit" class="submit disable">Split Classic Ether</div>
+                            <div id="submitSplit" class="submit disable">Split Classic Vapor</div>
                         </td>
                     </tr>
                 </table>
             </div>
         </div>
 
-        <script type="text/javascript" src="../../dist/ethers-wallet.js"></script>
+        <script type="text/javascript" src="../../dist/vapors-wallet.js"></script>
         <script type="text/javascript">
             var submitCheck = document.getElementById('submitCheck');
             var submitSplit = document.getElementById('submitSplit');
@@ -77,7 +77,7 @@
 
             var targetDrop = document.getElementById('drop');
 
-            var provider = new Wallet.providers.HttpProvider('https://linode-newark.ethers.ws:8002');
+            var provider = new Wallet.providers.HttpProvider('https://linode-newark.vapors.ws:8002');
 
             var contractAddress = '0x3474627d4f63a678266bc17171d87f8570936622';
             var contractAbi = JSON.parse('[{"constant":false,"inputs":[{"name":"balance","type":"uint256"}],"name":"claimDonations","outputs":[],"type":"function"},{"constant":true,"inputs":[],"name":"isClassic","outputs":[{"name":"","type":"bool"}],"type":"function"},{"constant":false,"inputs":[{"name":"classicAddress","type":"address"}],"name":"split","outputs":[],"type":"function"},{"inputs":[],"type":"constructor"}]');
@@ -94,7 +94,7 @@
                     return;
                 }
                 provider.getBalance(address, 'latest').then(function(balance) {
-                    alert('Balance: ' + Wallet.formatEther(balance, {commify: true}) + ' ' + Wallet.etherSymbol);
+                    alert('Balance: ' + Wallet.formatVapor(balance, {commify: true}) + ' ' + Wallet.vaporSymbol);
                 }, function(error) {
                     if (error) {
                         console.log(error);
@@ -109,7 +109,7 @@
                 if (submitSplit.classList.contains('disable')) { return; }
 
                 function done() {
-                    submitSplit.textContent = 'Split Classic Ether';
+                    submitSplit.textContent = 'Split Classic Vapor';
                     inputJson.readOnly = false;
                     inputPassword.readOnly = false;
                     inputTargetAddress.readOnly = false;
@@ -177,7 +177,7 @@
 
                         console.log(transaction);
 
-                        var accept = confirm('Balance: ' + Wallet.formatEther(balance, {commify: true}) + ' ' + Wallet.etherSymbol + '. Are you sure you want to split Classic Ether to ' + targetAddress + '?');
+                        var accept = confirm('Balance: ' + Wallet.formatVapor(balance, {commify: true}) + ' ' + Wallet.vaporSymbol + '. Are you sure you want to split Classic Vapor to ' + targetAddress + '?');
                         if (accept) {
                             var signedTransaction = wallet.sign(transaction);
                             function showError(error) {

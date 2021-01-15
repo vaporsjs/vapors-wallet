@@ -3,7 +3,7 @@ module.exports = function(grunt) {
     browserify: {
       dist: {
         files: {
-          'dist/ethers-wallet.js': [ 'index.js' ]
+          'dist/vapors-wallet.js': [ 'index.js' ]
         },
         options: {
           browserifyOptions: {
@@ -15,7 +15,7 @@ module.exports = function(grunt) {
     uglify: {
       dist: {
         files: {
-          'dist/ethers-wallet.min.js' : [ 'dist/ethers-wallet.js' ]
+          'dist/vapors-wallet.min.js' : [ 'dist/vapors-wallet.js' ]
         }
       }
     }

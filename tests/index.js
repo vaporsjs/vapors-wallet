@@ -13,8 +13,8 @@ module.exports.testChecksumAddress = require('./test-checksum-address.js');
 module.exports.testIcapAddress = require('./test-icap-address.js');
 
 
-// Test ether strng formatting and parsing
-module.exports.testEtherFormat = require('./test-ether-format.js');
+// Test vapor strng formatting and parsing
+module.exports.testVaporFormat = require('./test-vapor-format.js');
 
 
 // Test transactions

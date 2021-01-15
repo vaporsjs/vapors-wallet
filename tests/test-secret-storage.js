@@ -43,17 +43,17 @@ module.exports = function(test) {
         }
     ];
 
-    var geth = [
+    var gvap = [
         {
             address: '0x88a5C2d9919e46F883EB62F7b8Dd9d0CC45bc290',
-            data: fs.readFileSync('./test-wallets/wallet-test-geth-foo.json').toString(),
+            data: fs.readFileSync('./test-wallets/wallet-test-gvap-foo.json').toString(),
             password: 'foo',
             privateKey: '0xf03e581353c794928373fb0893bc731aefc4c4e234e643f3a46998b03cd4d7c5',
             type: 'version3'
         },
         {
             address: '0x4A9cf99357F5789251a8D7FaD5b86D0F31EEB938',
-            data: fs.readFileSync('./test-wallets/wallet-test-geth-no-password.json').toString(),
+            data: fs.readFileSync('./test-wallets/wallet-test-gvap-no-password.json').toString(),
             password: '',
             privateKey: '0xa016182717223d01f776149ec0b4a217d0e9930cad263f205427c6d3cd5560e7',
             type: 'version3'
@@ -75,7 +75,7 @@ module.exports = function(test) {
 
     var async = [];
 
-    geth.forEach(function(testcase) {
+    gvap.forEach(function(testcase) {
         // Check wallet type detection
         test.ok(Wallet.isValidWallet(testcase.data), 'wrong wallet type detected');
         test.ok(!Wallet.isCrowdsaleWallet(testcase.data), 'wrong wallet type detected');

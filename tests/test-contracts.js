@@ -1,7 +1,7 @@
 'use strict';
 var Wallet = require('../index.js');
 
-var provider = new Wallet.providers.EtherscanProvider({testnet: true});
+var provider = new Wallet.providers.VaporscanProvider({testnet: true});
 
 module.exports = function(test) {
     var contractAddress = '0xdfaf84077cF4bCECA4F79d167F47041Ed3006D5b';
